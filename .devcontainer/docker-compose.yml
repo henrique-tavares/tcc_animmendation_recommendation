@@ -5,7 +5,7 @@ services:
         image: python:3.10-slim
         volumes:
             - ..:/home/animmendation/tcc_animmendation/recommendation
-            # - datasets:/home/animmendation/tcc_animmendation/recommendation/datasets
+            - ~/.ssh:/home/animmendation/.ssh
         ports:
             - 50051:50051
         command: tail -f /dev/null
