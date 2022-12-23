@@ -4,7 +4,7 @@ from typing import List, Tuple, TypedDict, cast
 from loguru import logger
 
 from utils.prisma import prisma
-from utils.pg_conn import pg_conn
+from utils.pg_conn import pg_pool
 
 
 class PartialRecommendation(TypedDict):
@@ -31,19 +31,21 @@ class RecommenderService:
         return True
 
     @classmethod
-    def nearest_neighbors(cls, anime_id: int, n: int, excluded_anime_ids: List[int]):
-        return prisma.recommendation.find_many(
-            where={
-                "baseAnimeId": anime_id,
-                "recommendedAnimeId": {
-                    "not_in": excluded_anime_ids,
-                },
-            },
-            order={
-                "distance": "asc",
-            },
-            take=n if n != -1 else None,
-        )
+    def nearest_neighbors(cls, anime_id: int, n: int, offset: int, excluded_anime_ids: List[int]):
+        with pg_pool.connection() as conn:
+            return cast(
+                List[Tuple[int, float]],
+                conn.execute(
+                    """
+                    select "recommendedAnimeId", distance from "Recommendation"
+                    where "baseAnimeId" = %s and "recommendedAnimeId" <> all(%s)
+                    order by distance
+                    limit %s
+                    offset %s
+                    """,
+                    [anime_id, excluded_anime_ids, n if n > 0 else None, offset],
+                ).fetchall(),
+            )
 
     # @classmethod
     # def group_nearest_neighbors(cls, anime_ids: List[int], n: int, excluded_anime_ids: List[int]):
@@ -76,19 +78,19 @@ class RecommenderService:
 
     #     return []
     @classmethod
-    def group_nearest_neighbors(cls, anime_ids: List[int], excluded_anime_ids: List[int], n: int | None = None):
-
-        with pg_conn:
-            with pg_conn.cursor() as cur:
-                cur.execute(
-                    f"""
+    def group_nearest_neighbors(cls, anime_ids: List[int], excluded_anime_ids: List[int], n: int, offset: int):
+        with pg_pool.connection() as conn:
+            return cast(
+                List[Tuple[int, float]],
+                conn.execute(
+                    """
                     select "recommendedAnimeId", avg(distance) as distance from "Recommendation"
-                    where "baseAnimeId" = any(%s)
-                    and "recommendedAnimeId" <> all(%s)
+                    where "baseAnimeId" = any(%s) and "recommendedAnimeId" <> all(%s)
                     group by "recommendedAnimeId"
                     order by distance
-                    {f'limit {n}' if n else ''}
+                    limit %s
+                    offset %s
                     """,
-                    [anime_ids, excluded_anime_ids],
-                )
-                return cast(List[Tuple[int, float]], cur.fetchall())
+                    [anime_ids, excluded_anime_ids, n if n > 0 else None, offset],
+                ).fetchall(),
+            )

@@ -23,9 +23,8 @@ class RecommenderController(RecommenderServicer):
     def GetGroupRecommendations(self, request: GroupRecommendationRequest, context):
         with logger.catch(), MethodLogger("GetGroupRecommendations"):
 
-            logger.info("aaaaa")
             animes_rec = RecommenderService.group_nearest_neighbors(
-                list(request.animeIds), list(request.excludedAnimeIds), request.k
+                list(request.animeIds), list(request.excludedAnimeIds), request.amount, request.offset
             )
             return GroupRecommendationResponse(
                 recommendations=[
@@ -38,12 +37,12 @@ class RecommenderController(RecommenderServicer):
         with logger.catch(), MethodLogger("GetRecommendations"):
 
             recommendations = RecommenderService.nearest_neighbors(
-                request.animeId, request.k, list(request.excludedAnimeIds)
+                request.animeId, request.amount, request.offset, list(request.excludedAnimeIds)
             )
             return RecommendationResponse(
                 animeId=request.animeId,
                 recommendations=[
-                    Recommendation(recommendedAnimeId=r.recommendedAnimeId, rank=i + 1)
-                    for i, r in enumerate(recommendations)
+                    Recommendation(recommendedAnimeId=anime_id, rank=i + 1)
+                    for i, (anime_id, distance) in enumerate(recommendations)
                 ],
             )

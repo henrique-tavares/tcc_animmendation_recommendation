@@ -1,4 +1,4 @@
-import psycopg2
+from psycopg_pool import ConnectionPool
 from entities.env import Env
 
-pg_conn = psycopg2.connect(Env.db_url)
+pg_pool = ConnectionPool(Env.db_url)

@@ -8,6 +8,7 @@ import google.protobuf.descriptor
 import google.protobuf.internal.containers
 import google.protobuf.message
 import sys
+import typing
 
 if sys.version_info >= (3, 8):
     import typing as typing_extensions
@@ -30,9 +31,7 @@ class Recommendation(google.protobuf.message.Message):
         recommendedAnimeId: builtins.int = ...,
         rank: builtins.int = ...,
     ) -> None: ...
-    def ClearField(
-        self, field_name: typing_extensions.Literal["rank", b"rank", "recommendedAnimeId", b"recommendedAnimeId"]
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["rank", b"rank", "recommendedAnimeId", b"recommendedAnimeId"]) -> None: ...
 
 global___Recommendation = Recommendation
 
@@ -66,29 +65,28 @@ class RecommendationRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     ANIMEID_FIELD_NUMBER: builtins.int
-    K_FIELD_NUMBER: builtins.int
+    AMOUNT_FIELD_NUMBER: builtins.int
+    OFFSET_FIELD_NUMBER: builtins.int
     EXCLUDEDANIMEIDS_FIELD_NUMBER: builtins.int
     animeId: builtins.int
-    k: builtins.int
+    amount: builtins.int
+    offset: builtins.int
     @property
     def excludedAnimeIds(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
     def __init__(
         self,
         *,
         animeId: builtins.int = ...,
-        k: builtins.int | None = ...,
+        amount: builtins.int | None = ...,
+        offset: builtins.int | None = ...,
         excludedAnimeIds: collections.abc.Iterable[builtins.int] | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["_k", b"_k", "k", b"k"]) -> builtins.bool: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions.Literal[
-            "_k", b"_k", "animeId", b"animeId", "excludedAnimeIds", b"excludedAnimeIds", "k", b"k"
-        ],
-    ) -> None: ...
-    def WhichOneof(
-        self, oneof_group: typing_extensions.Literal["_k", b"_k"]
-    ) -> typing_extensions.Literal["k"] | None: ...
+    def HasField(self, field_name: typing_extensions.Literal["_amount", b"_amount", "_offset", b"_offset", "amount", b"amount", "offset", b"offset"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing_extensions.Literal["_amount", b"_amount", "_offset", b"_offset", "amount", b"amount", "animeId", b"animeId", "excludedAnimeIds", b"excludedAnimeIds", "offset", b"offset"]) -> None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_amount", b"_amount"]) -> typing_extensions.Literal["amount"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_offset", b"_offset"]) -> typing_extensions.Literal["offset"] | None: ...
 
 global___RecommendationRequest = RecommendationRequest
 
@@ -100,18 +98,14 @@ class RecommendationResponse(google.protobuf.message.Message):
     RECOMMENDATIONS_FIELD_NUMBER: builtins.int
     animeId: builtins.int
     @property
-    def recommendations(
-        self,
-    ) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___Recommendation]: ...
+    def recommendations(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___Recommendation]: ...
     def __init__(
         self,
         *,
         animeId: builtins.int = ...,
         recommendations: collections.abc.Iterable[global___Recommendation] | None = ...,
     ) -> None: ...
-    def ClearField(
-        self, field_name: typing_extensions.Literal["animeId", b"animeId", "recommendations", b"recommendations"]
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["animeId", b"animeId", "recommendations", b"recommendations"]) -> None: ...
 
 global___RecommendationResponse = RecommendationResponse
 
@@ -120,30 +114,29 @@ class GroupRecommendationRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     ANIMEIDS_FIELD_NUMBER: builtins.int
-    K_FIELD_NUMBER: builtins.int
+    AMOUNT_FIELD_NUMBER: builtins.int
+    OFFSET_FIELD_NUMBER: builtins.int
     EXCLUDEDANIMEIDS_FIELD_NUMBER: builtins.int
     @property
     def animeIds(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
-    k: builtins.int
+    amount: builtins.int
+    offset: builtins.int
     @property
     def excludedAnimeIds(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
     def __init__(
         self,
         *,
         animeIds: collections.abc.Iterable[builtins.int] | None = ...,
-        k: builtins.int | None = ...,
+        amount: builtins.int | None = ...,
+        offset: builtins.int | None = ...,
         excludedAnimeIds: collections.abc.Iterable[builtins.int] | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["_k", b"_k", "k", b"k"]) -> builtins.bool: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions.Literal[
-            "_k", b"_k", "animeIds", b"animeIds", "excludedAnimeIds", b"excludedAnimeIds", "k", b"k"
-        ],
-    ) -> None: ...
-    def WhichOneof(
-        self, oneof_group: typing_extensions.Literal["_k", b"_k"]
-    ) -> typing_extensions.Literal["k"] | None: ...
+    def HasField(self, field_name: typing_extensions.Literal["_amount", b"_amount", "_offset", b"_offset", "amount", b"amount", "offset", b"offset"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing_extensions.Literal["_amount", b"_amount", "_offset", b"_offset", "amount", b"amount", "animeIds", b"animeIds", "excludedAnimeIds", b"excludedAnimeIds", "offset", b"offset"]) -> None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_amount", b"_amount"]) -> typing_extensions.Literal["amount"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_offset", b"_offset"]) -> typing_extensions.Literal["offset"] | None: ...
 
 global___GroupRecommendationRequest = GroupRecommendationRequest
 
@@ -153,9 +146,7 @@ class GroupRecommendationResponse(google.protobuf.message.Message):
 
     RECOMMENDATIONS_FIELD_NUMBER: builtins.int
     @property
-    def recommendations(
-        self,
-    ) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___Recommendation]: ...
+    def recommendations(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___Recommendation]: ...
     def __init__(
         self,
         *,
